@@ -1,5 +1,5 @@
 CC=g++
-CFLAGS = -I$(IDIR) -Wall -lSDL2
+CFLAGS = -I$(IDIR) -Wall -lSDL2 -std=c++17
 IDIR=include
 
 SDIR=src
@@ -7,10 +7,10 @@ ODIR=obj
 
 OUTDIR=out
 
-_DEPS = dummy.h
+_DEPS = gangine.h helper.h input.h
 DEPS = $(patsubst %,$(IDIR)/%,$(_DEPS))
 
-_OBJ = main.o dummy.o
+_OBJ = main.o gangine.o helper.o input.o
 OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
 
 $(ODIR)/%.o: $(SDIR)/%.cpp $(DEPS)
