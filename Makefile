@@ -1,5 +1,5 @@
 CC=g++
-CFLAGS = -I$(IDIR) -Wall
+CFLAGS = -I$(IDIR) -Wall -lSDL2
 IDIR=include
 
 SDIR=src
