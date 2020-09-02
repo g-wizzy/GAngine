@@ -18,7 +18,7 @@ private:
     void clean_up();
 
     int game_loop();
-    void read_input();
+    void handle_events();
     void update();
     void render(double frame_advance);
 

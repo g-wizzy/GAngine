@@ -95,7 +95,7 @@ int GAngine::game_loop()
         previous = current;
         lag += elapsed;
 
-        read_input();
+        handle_events();
         while (lag > MS_PER_UPATE)
         {
             update();
@@ -108,12 +108,22 @@ int GAngine::game_loop()
 }
 
 
-void GAngine::read_input()
+void GAngine::handle_events()
 {
     SDL_Event event;
     while (SDL_PollEvent(&event))
     {
-        input.on_event(event);
+        switch (event.type)
+        {
+        case SDL_QUIT:
+            running = false;
+            break;
+
+        // TODO: add read more events (resize, lose / gain focus, etc.)
+
+        default:
+            input.on_event(event);
+        }
     }
 }
 
