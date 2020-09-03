@@ -122,7 +122,7 @@ void GAngine::handle_events()
         // TODO: add read more events (resize, lose / gain focus, etc.)
 
         default:
-            input.on_event(event);
+            Input::get_instance().on_event(event);
         }
     }
 }

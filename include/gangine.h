@@ -9,8 +9,6 @@ class GAngine
 private:
     const short MS_PER_UPATE = 16;
 
-    Input input;
-
     SDL_Window* window;
     SDL_Renderer* renderer;
 

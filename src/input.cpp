@@ -1,15 +1,22 @@
 #include "input.h"
 
+Input& Input::get_instance()
+{
+    static Input instance;
+
+    return instance;
+}
+
 void Input::on_event(const SDL_Event& event)
 {
     switch (event.type)
     {
     case SDL_KEYDOWN:
-        keys.insert_or_assign(event.key.keysym.sym, true);
+        keys[event.key.keysym.sym] = true;
         break;
     
     case SDL_KEYUP:
-        keys.insert_or_assign(event.key.keysym.sym, false);
+        keys[event.key.keysym.sym] = false;
         break;
 
     default:
@@ -19,14 +26,7 @@ void Input::on_event(const SDL_Event& event)
 
 bool Input::is_key_down(SDL_Keycode key)
 {
-    auto iterator = keys.find(key);
-    if (iterator != keys.end())
-    {
-        return iterator->second;
-    }
-    else
-    {
-        return false;
-    }
-    
+    // If the entry is inexistent, the map will insert the default value
+    // false, which is the expected behavior
+    return keys[key];
 }
