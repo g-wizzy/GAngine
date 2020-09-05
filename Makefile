@@ -7,10 +7,10 @@ ODIR=obj
 
 OUTDIR=out
 
-_DEPS = gangine.h helper.h input.h
+_DEPS = gangine.h helper.h input.h entity.h entitymanager.h systems.h components.h systems/system.h systems/debugrender.h systems/speed.h
 DEPS = $(patsubst %,$(IDIR)/%,$(_DEPS))
 
-_OBJ = main.o gangine.o helper.o input.o
+_OBJ = main.o gangine.o helper.o input.o entitymanager.o systems/debugrender.o systems/speed.o
 OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
 
 $(ODIR)/%.o: $(SDIR)/%.cpp $(DEPS)

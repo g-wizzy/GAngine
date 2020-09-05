@@ -3,6 +3,8 @@
 #include <SDL2/SDL.h>
 
 #include "input.h"
+#include "systems.h"
+#include "entitymanager.h"
 
 class GAngine
 {
@@ -14,17 +16,23 @@ private:
 
     bool init();
     void clean_up();
+    bool running;
 
     int game_loop();
     void handle_events();
     void update();
     void render(double frame_advance);
 
-    bool running;
+    ga_system::Speed* speedSystem;
+    ga_system::DebugRender* debugRender;
+
+    void create_entities();
 
 public:
     GAngine();
     ~GAngine();
 
     int run();
+
+    SDL_Renderer* get_renderer() {return renderer;}
 };

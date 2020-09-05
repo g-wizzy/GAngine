@@ -26,11 +26,35 @@ int GAngine::run()
         return -1;
     }
 
+    speedSystem = new ga_system::Speed();
+    debugRender = new ga_system::DebugRender(renderer);
+    create_entities();
+
     int errcode = game_loop();
 
     clean_up();
 
     return errcode;
+}
+
+
+void GAngine::create_entities()
+{
+    EntityManager& em = EntityManager::get_instance();
+
+    em.begin_new();
+        component::Color* color = static_cast<component::Color*>(em.add_component(component::color)); // defaults to white
+        component::Size* size = static_cast<component::Size*>(em.add_component(component::size));
+        size->w = size->h = 50;
+        component::Position* pos = static_cast<component::Position*>(em.add_component(component::position));
+        pos->x = 20;
+        component::Speed* speed = static_cast<component::Speed*>(em.add_component(component::speed));
+        speed->dx = 5;
+        speed->dy = 5;
+    Entity& entity = em.end_new();
+
+    debugRender->add_entity(color, size, pos);
+    speedSystem->add_entity(speed, pos);
 }
 
 
@@ -130,10 +154,12 @@ void GAngine::handle_events()
 
 void GAngine::update()
 {
-    if (input.is_key_down(SDLK_ESCAPE))
+    if (Input::get_instance().is_key_down(SDLK_ESCAPE))
     {
         running = false;
     }
+
+    speedSystem->update();
 }
 
 #include <iostream>
@@ -141,5 +167,8 @@ void GAngine::render(double frame_advance)
 {
     SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0x00, 0xFF);
     SDL_RenderClear(renderer);
+
+    debugRender->update();
+    
     SDL_RenderPresent(renderer);
 }
