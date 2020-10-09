@@ -1,17 +1,14 @@
 #include "gangine.h"
 
 #include "input.h"
-#include "helper.h"
 
+#include <SDL2/SDL.h>
 #include <iostream>
 
-using namespace helper;
 
 GAngine::GAngine() :
     running(true)
-{
-    SDL_Init(SDL_INIT_EVERYTHING);
-}
+    {}
 
 GAngine::~GAngine()
 {
@@ -19,7 +16,8 @@ GAngine::~GAngine()
 }
 
 
-int GAngine::run()
+int
+GAngine::run()
 {
     if (!init())
     {
@@ -38,7 +36,8 @@ int GAngine::run()
 }
 
 
-void GAngine::create_entities()
+void
+GAngine::create_entities()
 {
     EntityManager& em = EntityManager::get_instance();
 
@@ -58,7 +57,8 @@ void GAngine::create_entities()
 }
 
 
-bool GAngine::init()
+bool
+GAngine::init()
 {
     if (SDL_Init(SDL_INIT_EVERYTHING) < 0)
     {
@@ -66,8 +66,8 @@ bool GAngine::init()
         return false;
     }
 
-    window = NULL;
-    renderer = NULL;
+    window = nullptr;
+    renderer = nullptr;
 
     window = SDL_CreateWindow(
         "GAngine v0.1",
@@ -77,7 +77,7 @@ bool GAngine::init()
         480,
         SDL_WINDOW_OPENGL
     );
-    if (window == NULL)
+    if (window == nullptr)
     {
         std::cout << "SDL_CreateWindow error";
         return false;
@@ -88,7 +88,7 @@ bool GAngine::init()
         -1,
         SDL_RENDERER_PRESENTVSYNC | SDL_RENDERER_ACCELERATED
     );
-    if (renderer == NULL)
+    if (renderer == nullptr)
     {
         std::cout << "SDL_CreateRenderer error";
         return false;
@@ -98,7 +98,8 @@ bool GAngine::init()
 }
 
 
-void GAngine::clean_up()
+void
+GAngine::clean_up()
 {
     SDL_DestroyWindow(window);
     SDL_DestroyRenderer(renderer);
@@ -106,15 +107,16 @@ void GAngine::clean_up()
 }
 
 
-int GAngine::game_loop()
+int
+GAngine::game_loop()
 {
-    double previous = getCurrentTime();
+    double previous = SDL_GetTicks();
     double lag = 0.0;
 
     running = true;
     while (running)
     {
-        double current = getCurrentTime();
+        double current = SDL_GetTicks();
         double elapsed = current - previous;
         previous = current;
         lag += elapsed;
@@ -132,7 +134,8 @@ int GAngine::game_loop()
 }
 
 
-void GAngine::handle_events()
+void
+GAngine::handle_events()
 {
     SDL_Event event;
     while (SDL_PollEvent(&event))
@@ -152,18 +155,14 @@ void GAngine::handle_events()
 }
 
 
-void GAngine::update()
+void
+GAngine::update()
 {
-    if (Input::get_instance().is_key_down(SDLK_ESCAPE))
-    {
-        running = false;
-    }
-
     speedSystem->update();
 }
 
-#include <iostream>
-void GAngine::render(double frame_advance)
+void
+GAngine::render(double frame_advance)
 {
     SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0x00, 0xFF);
     SDL_RenderClear(renderer);
