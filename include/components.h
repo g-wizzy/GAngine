@@ -42,10 +42,10 @@ namespace component
     {
         Color(
             Entity& entity,
-            int r = 0xFF,
-            int g = 0xFF,
-            int b = 0xFF,
-            int a = 0xFF
+            float r = 1.0f,
+            float g = 1.0f,
+            float b = 1.0f,
+            float a = 1.0f
         ) :
             Component(entity),
             r(r),
@@ -54,7 +54,7 @@ namespace component
             a(a)
             {}
             
-        int r, g, b, a;
+        float r, g, b, a;
     };
 
     struct Speed : public Component

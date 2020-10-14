@@ -1,6 +1,7 @@
 #pragma once
 
 #include <GL/glew.h>
+#include <GL/gl.h>
 #include <GLFW/glfw3.h>
 
 #include "input.h"
@@ -19,8 +20,8 @@ private:
 
     bool init();
     void clean_up();
-    bool running;
 
+    bool running;
     int game_loop();
     void handle_events();
     void update();

@@ -1,8 +1,10 @@
 #pragma once
 
 #include "systems/system.h"
-
 #include "components.h"
+
+#include <GL/glew.h>
+#include <GL/gl.h>
 
 #include <vector>
 #include <map>
@@ -18,9 +20,11 @@ namespace ga_system
 
             component::Transform* camera;
 
+            GLuint vertexBuffer;
+            static const GLfloat g_vertex_buffer_data[];
+
         public:
-            DebugRender() :
-                RenderSystem() {}
+            DebugRender();
 
             void update() override;
             

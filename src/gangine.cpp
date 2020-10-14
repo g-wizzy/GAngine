@@ -2,7 +2,6 @@
 
 #include "input.h"
 
-#include <GL/glu.h>
 #include <iostream>
 
 
@@ -98,6 +97,10 @@ GAngine::init()
         return false;
     }
 
+    GLuint vertexArrayId;
+    glGenVertexArrays(1, &vertexArrayId);
+    glBindVertexArray(vertexArrayId);
+
     return true;
 }
 
@@ -155,7 +158,7 @@ GAngine::update()
 void
 GAngine::render(double frame_advance)
 {
-    glClear(GL_COLOR_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     debugRender->update();
 

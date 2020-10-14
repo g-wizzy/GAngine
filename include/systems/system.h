@@ -2,8 +2,10 @@
 
 #include "entity.h"
 
+#include <GL/glew.h>
+#include <GL/gl.h>
+
 #include <vector>
-#include <SDL2/SDL_render.h>
 
 namespace ga_system
 {
@@ -23,5 +25,13 @@ namespace ga_system
         public:
             RenderSystem() {}
             virtual ~RenderSystem() {}
+        
+            virtual void update() override
+            {
+                glUseProgram(programId);
+            }
+
+        protected:
+            GLuint programId;
     };
 };
