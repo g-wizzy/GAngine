@@ -25,4 +25,4 @@ run:
 	@ $(OUTDIR)/GAngine
 
 clean:
-	rm -f $(ODIR)/*.o *~ core $(IDIR)/*~
+	rm -f $(ODIR)/*.o $(ODIR)/**/*.o *~ core $(IDIR)/*~
