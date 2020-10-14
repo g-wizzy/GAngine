@@ -1,52 +1,105 @@
 #include "systems/debugrender.h"
 
+#include <GL/glew.h>
+#include <GL/glu.h>
+#include <glm/gtc/matrix_transform.hpp>
+
 using namespace ga_system;
 
-
-void DebugRender::update()
+void
+DebugRender::update()
 {
+    static const glm::mat4 projection = glm::perspective(
+        glm::radians(60.0f),
+        16.0f / 9.0f,
+        0.1f,
+        10.0f
+    );
+
     for (auto it = entities.begin(); it != entities.end(); ++it)
     {
         component::Color* color = static_cast<component::Color*>((*it)[component::color]);
-        component::Size* size = static_cast<component::Size*>((*it)[component::size]);
-        component::Position* position = static_cast<component::Position*>((*it)[component::position]);
+        component::Transform* transform = static_cast<component::Transform*>((*it)[component::transform]);
 
-        SDL_SetRenderDrawColor(
-            renderer,
-            color->r,
-            color->g,
-            color->b,
-            color->a
-        );
-        
-        SDL_Rect rect;
-        rect.x = position->x;
-        rect.y = position->y;
-        rect.w = size->w;
-        rect.h = size->h;
+        // Debug means cube
+        static const GLfloat g_vertex_buffer_data[] = {
+            -1.0f,-1.0f,-1.0f, // triangle 1 : begin
+            -1.0f,-1.0f, 1.0f,
+            -1.0f, 1.0f, 1.0f, // triangle 1 : end
+            1.0f, 1.0f,-1.0f, // triangle 2 : begin
+            -1.0f,-1.0f,-1.0f,
+            -1.0f, 1.0f,-1.0f, // triangle 2 : end
+            1.0f,-1.0f, 1.0f,
+            -1.0f,-1.0f,-1.0f,
+            1.0f,-1.0f,-1.0f,
+            1.0f, 1.0f,-1.0f,
+            1.0f,-1.0f,-1.0f,
+            -1.0f,-1.0f,-1.0f,
+            -1.0f,-1.0f,-1.0f,
+            -1.0f, 1.0f, 1.0f,
+            -1.0f, 1.0f,-1.0f,
+            1.0f,-1.0f, 1.0f,
+            -1.0f,-1.0f, 1.0f,
+            -1.0f,-1.0f,-1.0f,
+            -1.0f, 1.0f, 1.0f,
+            -1.0f,-1.0f, 1.0f,
+            1.0f,-1.0f, 1.0f,
+            1.0f, 1.0f, 1.0f,
+            1.0f,-1.0f,-1.0f,
+            1.0f, 1.0f,-1.0f,
+            1.0f,-1.0f,-1.0f,
+            1.0f, 1.0f, 1.0f,
+            1.0f,-1.0f, 1.0f,
+            1.0f, 1.0f, 1.0f,
+            1.0f, 1.0f,-1.0f,
+            -1.0f, 1.0f,-1.0f,
+            1.0f, 1.0f, 1.0f,
+            -1.0f, 1.0f,-1.0f,
+            -1.0f, 1.0f, 1.0f,
+            1.0f, 1.0f, 1.0f,
+            -1.0f, 1.0f, 1.0f,
+            1.0f,-1.0f, 1.0f
+            };
 
-        SDL_RenderFillRect(
-            renderer,
-            &rect
+        glm::mat4 view = glm::lookAt(
+            camera->position,
+            transform->position,
+            glm::vec3(0.0f, 0.0f, 1.0f)
         );
+
+        glm::mat4 model = glm::scale(glm::mat4(1.0f), transform->size);
+        model = glm::rotate(model, transform->eulerAngles.x, glm::vec3(1.0f, 0.0f, 0.0f));
+        model = glm::rotate(model, transform->eulerAngles.y, glm::vec3(0.0f, 1.0f, 0.0f));
+        model = glm::rotate(model, transform->eulerAngles.z, glm::vec3(0.0f, 0.0f, 1.0f));
+        model = glm::translate(model, transform->position);
+
+        //GLuint matrixId = glGetUniformLocation()
     }
 }
 
-void DebugRender::add_entity(
-    component::Color* color,
-    component::Size* size,
-    component::Position* position
+void
+DebugRender::add_visible(
+    component::Transform* transform,
+    component::Color* color
 )
 {
     std::map<component::Type, component::Component*> map;
     map[component::color] = color;
-    map[component::size] = size;
-    map[component::position] = position;
+    map[component::transform] = transform;
 
     entities.push_back(map);
 }
 
-void DebugRender::try_remove_entity(Entity const& entity)
+void
+DebugRender::set_camera(
+    component::Transform* transform
+)
+{
+    camera = transform;
+}
+
+void
+DebugRender::try_remove_entity(Entity const& entity)
 {
     for (auto it = entities.begin(); it != entities.end();)
     {

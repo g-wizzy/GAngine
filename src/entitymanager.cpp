@@ -3,19 +3,22 @@
 
 using namespace component;
 
-EntityManager& EntityManager::get_instance()
+EntityManager&
+EntityManager::get_instance()
 {
     static EntityManager instance;
 
     return instance;
 }
 
-void EntityManager::begin_new()
+void
+EntityManager::begin_new()
 {
     current++;
 }
 
-Component* EntityManager::add_component(Type const& type)
+Component*
+EntityManager::add_component(Type const& type)
 {
     switch (type)
     {
@@ -25,18 +28,16 @@ Component* EntityManager::add_component(Type const& type)
     case color:
         return new Color(current);
 
-    case position:
-        return new Position(current);
+    case transform:
+        return new Transform(current);
 
-    case size:
-        return new Size(current);
-    
     default:
         return nullptr;
     }
 }
 
-Entity& EntityManager::end_new()
+Entity&
+EntityManager::end_new()
 {
     return current;
 }

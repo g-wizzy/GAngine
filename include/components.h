@@ -2,14 +2,15 @@
 
 #include "entity.h"
 
+#include <glm/glm.hpp>
+
 namespace component
 {
     enum Type
     {
-        size,
-        position,
+        transform,
         color,
-        speed
+        speed,
     };
 
     struct Component
@@ -18,45 +19,58 @@ namespace component
         Entity& entity;
     };
 
-    struct Size : public Component
+    struct Transform : public Component
     {
-        Size(Entity& entity, int w = 0, int h = 0) :
+        Transform(
+            Entity& entity,
+            glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f),
+            glm::vec3 size = glm::vec3(1.0f, 1.0f, 1.0f),
+            glm::vec3 eulerAngles = glm::vec3(0.0f, 0.0f, 0.0f)
+        ) :
             Component(entity),
-            w(w),
-            h(h)
+            position(position),
+            size(size),
+            eulerAngles(eulerAngles)
             {}
-        int w, h;
-    };
 
-    struct Position : public Component
-    {
-        Position(Entity& entity, int x = 0, int y = 0) :
-            Component(entity),
-            x(x),
-            y(y)
-            {}
-        int x, y;
+        glm::vec3 position;
+        glm::vec3 size;
+        glm::vec3 eulerAngles;
     };
 
     struct Color : public Component
     {
-        Color(Entity& entity, int r = 0xFF, int g = 0xFF, int b = 0xFF, int a = 0xFF) :
+        Color(
+            Entity& entity,
+            int r = 0xFF,
+            int g = 0xFF,
+            int b = 0xFF,
+            int a = 0xFF
+        ) :
             Component(entity),
             r(r),
             g(g),
             b(b),
             a(a)
             {}
+            
         int r, g, b, a;
     };
 
     struct Speed : public Component
     {
-        Speed(Entity& entity, int dx = 0, int dy = 0) :
+        Speed(
+            Entity& entity,
+            float dx = 0,
+            float dy = 0,
+            float dz = 0
+        ) :
             Component(entity),
             dx(dx),
-            dy(dy)
+            dy(dy),
+            dz(dz)
             {}
-        int dx, dy;
+
+        float dx, dy, dz;
     };
 };

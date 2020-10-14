@@ -16,17 +16,20 @@ namespace ga_system
                 std::map<component::Type, component::Component*>
                 > entities;
 
+            component::Transform* camera;
+
         public:
-            DebugRender(SDL_Renderer* renderer) :
-                RenderSystem(renderer)
-                {}
+            DebugRender() :
+                RenderSystem() {}
 
             void update() override;
             
-            void add_entity(
-                component::Color*,
-                component::Size*,
-                component::Position*
+            void set_camera(
+                component::Transform*
+            );
+            void add_visible(
+                component::Transform*,
+                component::Color*
                 );
             void try_remove_entity(Entity const&) override;
 

@@ -20,7 +20,7 @@ namespace ga_system
 
             void add_entity(
                 component::Speed*,
-                component::Position*
+                component::Transform*
                 );
             void try_remove_entity(Entity const&) override;
     };
