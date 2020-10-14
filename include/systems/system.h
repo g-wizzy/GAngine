@@ -21,12 +21,7 @@ namespace ga_system
     class RenderSystem : System
     {
         public:
-            RenderSystem(SDL_Renderer* renderer) :
-                renderer(renderer)
-                {}
+            RenderSystem() {}
             virtual ~RenderSystem() {}
-
-        protected:
-            SDL_Renderer* renderer;
     };
 };

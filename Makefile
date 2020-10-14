@@ -1,5 +1,6 @@
 CC=g++
-CFLAGS = -I$(IDIR) -Wall -lSDL2 -std=c++17
+CFLAGS = -I$(IDIR) -Wall -std=c++17
+LDFLAGS = -lGLEW -lglfw -lGL
 
 IDIR=include
 SDIR=src
@@ -17,8 +18,7 @@ $(ODIR)/%.o: $(SDIR)/%.cpp $(DEPS)
 	$(CC) -c -o $@ $< $(CFLAGS)
 
 $(OUTDIR)/GAngine: $(OBJ)
-	$(CC) -o $@ $^ $(CFLAGS) #$(LIBS)
-
+	$(CC) -o $@ $^ $(CFLAGS) $(LDFLAGS)
 .PHONY: clean
 
 run:

@@ -1,18 +1,21 @@
 #pragma once
 
-#include <SDL2/SDL.h>
+#include <GL/glew.h>
+#include <GLFW/glfw3.h>
 
 #include "input.h"
 #include "systems.h"
 #include "entitymanager.h"
+
+#define WINDOW_WIDTH 1000
+#define WINDOW_HEIGHT 1000
 
 class GAngine
 {
 private:
     const short MS_PER_UPATE = 16;
 
-    SDL_Window* window;
-    SDL_Renderer* renderer;
+    GLFWwindow* window = nullptr;
 
     bool init();
     void clean_up();
@@ -33,6 +36,4 @@ public:
     ~GAngine();
 
     int run();
-
-    SDL_Renderer* get_renderer() {return renderer;}
 };
