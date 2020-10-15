@@ -1,10 +1,12 @@
 #version 330 core
 
-uniform vec3 in_color;
+in vec2 UV;
 
 out vec3 color;
 
+uniform sampler2D texSampler;
+
 void main()
 {
-    color = in_color;
+    color = texture(texSampler, UV).rgb;
 }

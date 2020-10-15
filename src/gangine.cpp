@@ -49,14 +49,14 @@ GAngine::create_entities()
     // Cube
     em.begin_new();
         component::Color* color = static_cast<component::Color*>(em.add_component(component::color)); // defaults to white
+        color->r = color->b = 0;
         component::Transform* transform = static_cast<component::Transform*>(em.add_component(component::transform));
-        // component::Speed* speed = static_cast<component::Speed*>(em.add_component(component::speed));
-        // speed->dx = 5;
-        // speed->dy = 5;
+        component::Speed* speed = static_cast<component::Speed*>(em.add_component(component::speed));
+        speed->dz = 1e-2;
     /*Entity& entity = */em.end_new(); // Entity has no purpose as of now
 
     debugRender->add_visible(transform, color);
-    //speedSystem->add_entity(speed, pos);
+    speedSystem->add_entity(speed, transform);
 
     // Camera
     em.begin_new();

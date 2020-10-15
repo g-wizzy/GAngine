@@ -3,6 +3,8 @@
 #include "shaders.hpp"
 #include <glm/gtc/matrix_transform.hpp>
 
+#include <iostream>
+
 using namespace ga_system;
 
 const GLfloat DebugRender::g_vertex_buffer_data[] = {
@@ -44,6 +46,44 @@ const GLfloat DebugRender::g_vertex_buffer_data[] = {
     1.0f,-1.0f, 1.0f
 };
 
+const GLfloat DebugRender::g_uv_buffer_data[] = {
+    0.000059f, 0.000004f,
+    0.000103f, 0.336048f,
+    0.335973f, 0.335903f,
+    1.000023f, 0.000013f,
+    0.667979f, 0.335851f,
+    0.999958f, 0.336064f,
+    0.667979f, 0.335851f,
+    0.336024f, 0.671877f,
+    0.667969f, 0.671889f,
+    1.000023f, 0.000013f,
+    0.668104f, 0.000013f,
+    0.667979f, 0.335851f,
+    0.000059f, 0.000004f,
+    0.335973f, 0.335903f,
+    0.336098f, 0.000071f,
+    0.667979f, 0.335851f,
+    0.335973f, 0.335903f,
+    0.336024f, 0.671877f,
+    1.000004f, 0.671847f,
+    0.999958f, 0.336064f,
+    0.667979f, 0.335851f,
+    0.668104f, 0.000013f,
+    0.335973f, 0.335903f,
+    0.667979f, 0.335851f,
+    0.335973f, 0.335903f,
+    0.668104f, 0.000013f,
+    0.336098f, 0.000071f,
+    0.000103f, 0.336048f,
+    0.000004f, 0.671870f,
+    0.336024f, 0.671877f,
+    0.000103f, 0.336048f,
+    0.336024f, 0.671877f,
+    0.335973f, 0.335903f,
+    0.667969f, 0.671889f,
+    1.000004f, 0.671847f,
+    0.667979f, 0.335851f
+};
 
 DebugRender::DebugRender() :
     RenderSystem()
@@ -52,11 +92,19 @@ DebugRender::DebugRender() :
         glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
         glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data), g_vertex_buffer_data, GL_STATIC_DRAW);
 
+        glGenBuffers(1, &uvBuffer);
+        glBindBuffer(GL_ARRAY_BUFFER, uvBuffer);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(g_uv_buffer_data), g_uv_buffer_data, GL_STATIC_DRAW);
+
         programId = load_shaders(
             "basic_vertex",
             "basic_fragment"
         );
+
+        texture = load_DDS("uvtemplate");
+        textureId = glGetUniformLocation(programId, "texSampler");
 }
+
 
 void
 DebugRender::update()
@@ -69,6 +117,10 @@ DebugRender::update()
         0.1f,
         10.0f
     );
+
+    glEnable(GL_CULL_FACE);
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LESS);
 
     for (auto it = entities.begin(); it != entities.end(); ++it)
     {
@@ -94,6 +146,11 @@ DebugRender::update()
         GLuint matrixId = glGetUniformLocation(programId, "mvp");
         glUniformMatrix4fv(matrixId, 1, GL_FALSE, &mvp[0][0]);
 
+        // Load texture
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, texture);
+        glUniform1i(textureId, 0);
+
         // Load vertices
         glEnableVertexAttribArray(0);
         glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
@@ -106,11 +163,22 @@ DebugRender::update()
             (void*)0
         );
 
-        GLuint colorId = glGetUniformLocation(programId, "in_color");
-        glUniform3fv(colorId, 1, &(color->r));
+        // Load UV
+        glEnableVertexAttribArray(1);
+        glBindBuffer(GL_ARRAY_BUFFER, uvBuffer);
+        glVertexAttribPointer(
+            1,
+            2,
+            GL_FLOAT,
+            GL_FALSE,
+            0,
+            (void*)0
+        );
 
         glDrawArrays(GL_TRIANGLES, 0, 36);
+
         glDisableVertexAttribArray(0);
+        glDisableVertexAttribArray(1);
     }
 }
 

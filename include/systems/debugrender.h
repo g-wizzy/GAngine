@@ -22,6 +22,11 @@ namespace ga_system
 
             GLuint vertexBuffer;
             static const GLfloat g_vertex_buffer_data[];
+            
+            GLuint texture;
+            GLuint textureId;
+            GLuint uvBuffer;
+            static const GLfloat g_uv_buffer_data[];
 
         public:
             DebugRender();
