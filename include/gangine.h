@@ -26,7 +26,7 @@ private:
     bool running;
 
     int game_loop();
-    void handle_events();
+    void handle_events(int ticks);
     void update();
     void render(double frame_advance);
 

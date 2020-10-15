@@ -140,7 +140,8 @@ GAngine::game_loop()
         lag += elapsed;
         measureTimer += elapsed;
 
-        handle_events();
+        handle_events(elapsed);
+
         while (lag > CLOCKS_PER_UPATE)
         {
             update();
@@ -173,13 +174,19 @@ GAngine::game_loop()
 
 
 void
-GAngine::handle_events()
+GAngine::handle_events(int ticks)
 {
-    running = !(
-        glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS
+    Input& input = Input::get_instance();
+    input.update(window, ticks);
+
+    if (
+        input.get_key(GLFW_KEY_ESCAPE).is_down()
         ||
         glfwWindowShouldClose(window) != 0
-    );
+    )
+    {
+        running = false;
+    }
 }
 
 

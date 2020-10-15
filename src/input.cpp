@@ -1,32 +1,61 @@
 #include "input.h"
 
-Input& Input::get_instance()
+#include <iostream>
+#include <GLFW/glfw3.h>
+
+Input::Input()
+{
+    // TODO: set up every key
+    keys[GLFW_KEY_ESCAPE] = key_state_t();
+}
+
+Input&
+Input::get_instance()
 {
     static Input instance;
 
     return instance;
 }
 
-void Input::on_event(const SDL_Event& event)
+void
+Input::update(
+    GLFWwindow* window,
+    int ticks
+)
 {
-    switch (event.type)
+    for (auto it = keys.begin(); it != keys.end(); ++it)
     {
-    case SDL_KEYDOWN:
-        keys[event.key.keysym.sym] = true;
-        break;
-    
-    case SDL_KEYUP:
-        keys[event.key.keysym.sym] = false;
-        break;
-
-    default:
-        break;
+        update_key(window, ticks, it->first);
     }
 }
 
-bool Input::is_key_down(SDL_Keycode key)
+void
+Input::update_key(
+    GLFWwindow* window,
+    int ticks,
+    int key
+)
 {
-    // If the entry is inexistent, the map will insert the default value
-    // false, which is the expected behavior
-    return keys[key];
+    if (glfwGetKey(window, key) == GLFW_PRESS)
+    {
+        keys[key].hold(ticks);
+    }
+}
+
+const key_state_t&
+Input::get_key(int key) const
+{
+    const static key_state_t inexistent_key;
+    
+    auto search = keys.find(key);
+    if (search != keys.end())
+    {
+        return search->second;
+    }
+    else
+    {
+        std::cout << "WARNING : inexistent key lookup : " << glfwGetKeyName(key, 0) << std::endl;
+        return inexistent_key;
+    }
+    
 }
