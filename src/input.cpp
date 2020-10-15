@@ -5,8 +5,11 @@
 
 Input::Input()
 {
-    // TODO: set up every key
-    keys[GLFW_KEY_ESCAPE] = key_state_t();
+    init_key(GLFW_KEY_ESCAPE);
+    init_key(GLFW_KEY_SPACE);
+    init_key(GLFW_KEY_A);
+    init_key(GLFW_KEY_S);
+    init_key(GLFW_KEY_D);
 }
 
 Input&
@@ -27,6 +30,14 @@ Input::update(
     {
         update_key(window, ticks, it->first);
     }
+}
+
+void
+Input::init_key(
+    int key
+)
+{
+    keys[key] = key_state_t();
 }
 
 void

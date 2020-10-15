@@ -29,6 +29,7 @@ class Input
 private:
     Input();
 
+    void init_key(int key);
     void update_key(GLFWwindow* window, int ticks, int key);
 
     std::map<int, key_state_t> keys;
