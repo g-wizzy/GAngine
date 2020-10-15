@@ -40,6 +40,11 @@ Input::update_key(
     {
         keys[key].hold(ticks);
     }
+    else
+    {
+        keys[key].release();
+    }
+    
 }
 
 const key_state_t&
