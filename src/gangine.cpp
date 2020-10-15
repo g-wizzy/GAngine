@@ -2,6 +2,7 @@
 
 #include "input.h"
 
+#include <GL/glut.h>
 #include <iostream>
 
 
@@ -111,27 +112,60 @@ GAngine::clean_up()
     // TODO
 }
 
+double
+clock_to_milliseconds(clock_t t)
+{
+    return t/(double)CLOCKS_PER_SEC * 1000.0;
+}
+
 int
 GAngine::game_loop()
 {
-    double previous = 1000 * glfwGetTime();
-    double lag = 0.0;
+    clock_t previous = clock();
+    clock_t lag = 0;
+
+    clock_t measureTimer = 0;
+    unsigned int frames = 0;
+    unsigned int updates = 0;
+    double fps = 1.0;
+    double ups = 1.0;
 
     running = true;
     while (running)
     {
-        double current = 1000 * glfwGetTime();
-        double elapsed = current - previous;
+        clock_t current = clock();
+        clock_t elapsed = current - previous;
+
         previous = current;
         lag += elapsed;
+        measureTimer += elapsed;
 
         handle_events();
-        while (lag > MS_PER_UPATE)
+        while (lag > CLOCKS_PER_UPATE)
         {
             update();
-            lag -= MS_PER_UPATE;
+            updates++;
+            lag -= CLOCKS_PER_UPATE;
         }
-        render(lag / MS_PER_UPATE);
+        render(lag / CLOCKS_PER_UPATE);
+        frames++;
+
+        if (measureTimer > CLOCKS_PER_SEC)
+        {
+            fps = (double)frames * 0.5 + frames * 0.5;
+            ups = (double)updates * 0.5 + updates * 0.5;
+
+            frames = 0;
+            updates = 0;
+
+            std::cout << "New measure" << std::endl;
+            std::cout << "FPS : " << fps << std::endl;
+            std::cout << "UPS : " << ups << std::endl;
+            std::cout << "Frame duration  : " << 1.0 / fps << std::endl;
+            std::cout << "Update duration : " << 1.0 / ups << std::endl;
+
+            measureTimer -= CLOCKS_PER_SEC;
+        }
     }
 
     return 0;

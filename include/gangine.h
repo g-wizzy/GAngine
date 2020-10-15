@@ -11,10 +11,12 @@
 #define WINDOW_WIDTH 1000
 #define WINDOW_HEIGHT 1000
 
+#define MS_PER_UPDATE 16
+
 class GAngine
 {
 private:
-    const short MS_PER_UPATE = 16;
+    const short CLOCKS_PER_UPATE = CLOCKS_PER_SEC / 1000 * MS_PER_UPDATE;
 
     GLFWwindow* window = nullptr;
 
@@ -22,6 +24,7 @@ private:
     void clean_up();
 
     bool running;
+
     int game_loop();
     void handle_events();
     void update();
@@ -30,6 +33,7 @@ private:
     ga_system::Speed* speedSystem;
     ga_system::DebugRender* debugRender;
 
+    // debug
     void create_entities();
 
 public:
