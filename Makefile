@@ -14,11 +14,21 @@ DEPS = $(patsubst %,$(IDIR)/%,$(_DEPS))
 _OBJ = main.o gangine.o input.o entitymanager.o systems/debugrender.o systems/speed.o
 OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
 
-$(ODIR)/%.o: $(SDIR)/%.cpp $(DEPS)
+.SECONDEXPANSION:
+
+$(ODIR)/%.o: $(SDIR)/%.cpp $(DEPS) $$(@D)/.f
 	$(CC) -c -o $@ $< $(CFLAGS)
 
 $(OUTDIR)/GAngine: $(OBJ)
+	mkdir -p $(OUTDIR)
 	$(CC) -o $@ $^ $(CFLAGS) $(LDFLAGS)
+
+%/.f:
+	mkdir -p $(dir $@)
+	touch $@
+
+.PRECIOUS: %/.f
+
 .PHONY: clean
 
 run:
